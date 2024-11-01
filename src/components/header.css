@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .bg-white {
+    background-color: #ffffff;
+  }
+  
+  h1 {
+    color: #1f2937; /* Gray 900 */
+  }
+  
+  .text-gray-500 {
+    color: #6b7280; /* Gray 500 */
+  }
+  
+  .text-primary {
+    background-color: #6366f1; /* Indigo */
+    color: white;
+  }
+  
+  .navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-link {
+    color: #1f2937; /* Gray 900 */
+  }
+  
+  .nav-link:hover {
+    color: #6366f1; /* Indigo hover */
+  }
+  
+  .offcanvas {
+    background-color: #ffffff;
+  }
+  
+  .offcanvas .nav-link {
+    font-size: 1.25rem;
+  }
+  
+  .offcanvas .offcanvas-header {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
