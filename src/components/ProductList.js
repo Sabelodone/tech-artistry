@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
 
-// Sample product data with additional features
 const products = [
-   {
+
+  {
     id: 1,
     name: 'Web Design',
     description: 'Create stunning and user-friendly websites that captivate visitors.',
@@ -81,7 +80,7 @@ const products = [
     id: 5,
     name: 'E-commerce Solutions',
     description: 'Launch your online store with robust e-commerce platforms.',
-    imageUrl: 'robot5.png',
+    imageUrl: 'robot6.jpeg',
     tags: ['E-commerce', 'Online Store'],
     rating: 4.6,
     price: 'R 10,999',
@@ -98,7 +97,7 @@ const products = [
     id: 6,
     name: 'Digital Marketing',
     description: 'Enhance your online presence with targeted marketing strategies.',
-    imageUrl: 'robot6.png',
+    imageUrl: 'robot5.jpeg',
     tags: ['Marketing', 'SEO', 'Social Media'],
     rating: 4.9,
     price: 'R 8,499',
@@ -112,9 +111,13 @@ const products = [
     ],
   },
 ];
+  // Your product data here...
+
 
 const ProductsList = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [startIndex, setStartIndex] = useState(0); // Track start index of visible cards
+  const scrollContainerRef = useRef(null);
 
   const openModal = (product) => {
     setSelectedProduct(product);
@@ -124,27 +127,68 @@ const ProductsList = () => {
     setSelectedProduct(null);
   };
 
+  // Close modal on "Escape" key press
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Escape') closeModal();
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  const scroll = (direction) => {
+    const newIndex = direction === 'left' ? startIndex - 1 : startIndex + 1;
+    if (newIndex >= 0 && newIndex <= products.length - 3) {
+      setStartIndex(newIndex); // Update start index
+    }
+  };
+
+  // Define responsive breakpoints
+  const breakpoints = {
+    sm: 640,
+    md: 768,
+    lg: 1024,
+  };
+
+  // Calculate number of cards to display based on screen size
+  const getCardsPerView = () => {
+    const width = window.innerWidth;
+    if (width < breakpoints.sm) return 1; // Show 1 card on small screens
+    if (width < breakpoints.md) return 2; // Show 2 cards on medium screens
+    return 3; // Show 3 cards on large screens
+  };
+
+  const cardsPerView = getCardsPerView();
+
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 min-h-screen py-10">
       <header className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Our Premium Products</h1>
         <p className="text-gray-600 mt-4 text-base md:text-lg">Explore our innovative technology solutions designed for the future.</p>
       </header>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product, index) => (
-            <motion.div
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+        <button
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-purple-600 text-white p-2 rounded-full shadow-md hover:bg-purple-700 transition duration-300"
+          onClick={() => scroll('left')}
+          disabled={startIndex === 0} // Disable button if at the start
+        >
+          &#9664;
+        </button>
+
+        <div ref={scrollContainerRef} className="flex overflow-x-hidden gap-6 scrollbar-hide">
+          {products.slice(startIndex, startIndex + cardsPerView).map((product) => (
+            <div
               key={product.id}
-              className="flex flex-col bg-white rounded-lg shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }} // Slide from left for even, right for odd
-              animate={{ opacity: 1, x: 0 }} // Slide to center
-              transition={{ duration: 0.5, delay: index * 0.1 }} // Slight delay for staggered effect
+              className={`relative flex flex-col bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 min-w-[${Math.floor(
+                100 / cardsPerView
+              )}%]`}
             >
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
+              <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover rounded-t-lg" />
+
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-purple-500 to-transparent opacity-30 pointer-events-none rounded-lg"></div>
+
               <div className="flex flex-col justify-between flex-grow p-4 sm:p-6">
                 <div>
                   <h3 className="text-lg sm:text-2xl font-semibold text-purple-700">{product.name}</h3>
@@ -169,14 +213,24 @@ const ProductsList = () => {
                   Learn More
                 </button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
+
+        <button
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-purple-600 text-white p-2 rounded-full shadow-md hover:bg-purple-700 transition duration-300"
+          onClick={() => scroll('right')}
+          disabled={startIndex >= products.length - cardsPerView} // Disable button if at the end
+        >
+          &#9654;
+        </button>
       </div>
 
-      {/* Modal for product details */}
       {selectedProduct && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={(e) => e.target === e.currentTarget && closeModal()}
+        >
           <div className="bg-white rounded-lg shadow-lg w-11/12 sm:w-1/3 p-6">
             <h2 className="text-2xl font-bold text-purple-700 mb-4">{selectedProduct.name}</h2>
             <img src={selectedProduct.imageUrl} alt={selectedProduct.name} className="w-full h-48 object-cover rounded-lg mb-4" />

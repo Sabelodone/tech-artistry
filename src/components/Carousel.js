@@ -25,15 +25,19 @@ const tags = [
 
 const Carousel = () => {
   return (
-    <div className="bg-navy text-black py-6 overflow-hidden relative">
-      <div className="whitespace-nowrap animate-marquee flex items-center space-x-4 md:space-x-6">
+    <div className="whitespace-nowrap animate-marquee flex items-center space-x-6">
+      {/* Marquee Wrapper */}
+      <div 
+        className="whitespace-nowrap animate-marquee flex items-center space-x-6" 
+        aria-label="Skills and Services Carousel"
+      >
         {tags.concat(tags).map((tag, index) => (
           <div
             key={index}
-            className="inline-block p-4 md:p-6 text-center transition-transform transform hover:scale-105"
+            className="inline-block p-4 md:p-6 text-center transition-transform transform hover:scale-105 hover:bg-purple-700 hover:text-white rounded-lg shadow-md bg-white"
           >
-            <i className={`${tag.icon} text-2xl md:text-3xl mb-2`}></i>
-            <div className="text-base md:text-lg font-semibold">{tag.name}</div>
+            <i className={`${tag.icon} text-3xl md:text-4xl mb-2 text-purple-700`}></i>
+            <div className="text-base md:text-lg font-semibold text-gray-800">{tag.name}</div>
           </div>
         ))}
       </div>
