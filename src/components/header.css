@@ -1,46 +1,51 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+/* Rain Effect */
+.rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.rain::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+  animation: rain 2s linear infinite;
+  transform: translateX(-50%);
+}
+
+@keyframes rain {
+  0% {
+    transform: translateY(0);
   }
-  
-  .bg-white {
-    background-color: #ffffff;
+  100% {
+    transform: translateY(100vh);
   }
-  
-  h1 {
-    color: #1f2937; /* Gray 900 */
+}
+
+.rain .beam {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: beam-fall 1.5s linear infinite;
+  transform: translateX(-50%);
+}
+
+@keyframes beam-fall {
+  0% {
+    transform: translateY(-50px);
   }
-  
-  .text-gray-500 {
-    color: #6b7280; /* Gray 500 */
+  100% {
+    transform: translateY(100vh);
   }
-  
-  .text-primary {
-    background-color: #6366f1; /* Indigo */
-    color: white;
-  }
-  
-  .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .nav-link {
-    color: #1f2937; /* Gray 900 */
-  }
-  
-  .nav-link:hover {
-    color: #6366f1; /* Indigo hover */
-  }
-  
-  .offcanvas {
-    background-color: #ffffff;
-  }
-  
-  .offcanvas .nav-link {
-    font-size: 1.25rem;
-  }
-  
-  .offcanvas .offcanvas-header {
-    border-bottom: 1px solid #dee2e6;
-  }
-  
+}

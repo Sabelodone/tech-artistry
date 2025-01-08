@@ -24,5 +24,13 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      addUtilities({
+        '.clip-triangle': {
+          clipPath: 'polygon(0% 0%, 100% 0%, 0% 100%)', // Custom clip-path
+        },
+      });
+    }
+  ],
 };
